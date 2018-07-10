@@ -23,79 +23,95 @@
           ¦± README.md
 
 4. Install Travis CI GitHub App to the repository
-    - Login to Travis CI site : https://travis-ci.com/profile/kdw503 (sign up if needed)
-    - Click 'Manage repositories on GitHub' button beside the title 'GitHub Apps Integration' in 'Repositories' tab.
-       Then, it will connect to the 'Travis CI' page in 'Personal settings' page in my GitHub account.
-    - Click 'Only select repositories' radio button in the 'Repository access' item.
-       And, choose the 'TravisTest' repository then save.
+    - Login to Travis CI site :
+	https://travis-ci.com/profile/kdw503 (sign up if needed)
+    - Click 'Manage repositories on GitHub' button beside the title
+	'GitHub Apps Integration' in 'Repositories' tab.
+      Then, it will connect to the 'Travis CI' page in 'Personal settings'
+	page in my GitHub account.
+    - Click 'Only select repositories' radio button in the
+	'Repository access' item.
+      And, choose the 'TravisTest' repository then save.
 
-5. (deprecated) Install Travis CI service (If we did step 5, we don't need to do this step)
-    - Go to the repository in the GitHub, click setting button and then choose 'Integration & service'.
-    - Add service 'Travis CI' then fill in the blank. (But, GutHub says this is being deprecated)
+5. (deprecated) Install Travis CI service (If we did step 5, we don't need
+     to do this step)
+    - Go to the repository in the GitHub, click setting button and then
+         choose 'Integration & service'.
+    - Add service 'Travis CI' then fill in the blank. (But, GutHub says
+         this is being deprecated)
          User : kdw503
          Token : go to Travis CI site, pick my profile and copy token
          Domain : https://notify.travis-ci.com
 
 6. Pkg.test("TravisTest")
+     - If the test passed,go to step 7
 
-7. If the test passed, push the local commit to the master branch in the repository. 
-      This push will run the Travis CI script.
-      We can check the progress in Travis CI site.
+7. Push the local commit to the master branch in the repository.
+   - This push will run the Travis CI script.
+   - We can check the progress in Travis CI site.
 
 
 * Using 'Documenter' in the Travis CI (after adding Travis CI App)
-Each time you push new updates to your master branch of a package repository, the following will happen.- travis buildbots startup and run your tests;
-- each buildbot will build the package docs using your docs/make.jl script;
-- a single buildbot will then try to push the generated docs back to GitHub.
 
-1. SSH Deploy Keys : Deploy keys provide push access to a 'single' repository, to allow secure deployment of generated documentation from Travis to GitHub. 
+Each time you push new updates to your master branch of a package repository, the following will happen.
+- travis buildbots startup and run your tests;
+- each buildbot will build the package docs using your docs/make.jl script
+- a single buildbot will then try to push the generated docs back to
+   GitHub.
+
+1. SSH Deploy Keys : Deploy keys provide push access to a 'single'
+    repository, to allow secure deployment of generated documentation from
+    Travis to GitHub.
     - Make sure that 'which', 'git', and 'ssh-keygen' is installed.
     - julia> using Documenter
     - julia> Travis.genkeys("TravisTest")
-              Info: add the public key below to https://github.com/kdw503/TravisTest/settings/
+              Info: add the public key below to https://github.com/kdw503....
               keys with read/write access:
 
               [SSH PUBLIC KEY HERE]
               ex) ssh-rsa AAAAB3NzaC1yc.....tCxaJiun kdw@kdw-asus
 
-              Info: add a secure environment variable named 'DOCUMENTER_KEY' 
-                 to https://travis-ci.org/kdw503/TravisTest/settings with value:
+              Info: add a secure environment variable named ....
 
               [LONG BASE64 ENCODED PRIVATE KEY]
               ex) LS0tLS......S0tLQo=         
-    - Add the public ssh key to your settings page for the GitHub repository
-      go to https://github.com/kdw503/TravisTest/settings/keys
-      and add the public key by clicking the 'Add deply key' button
+    - Add the public ssh key to the settings page for the GitHub repository
+         go to https://github.com/kdw503/TravisTest/settings/keys
+         and add the public key by clicking the 'Add deply key' button
               Title : documenter
               Key : ssh-rsa AAAAB3NzaC1yc.....tCxaJiun kdw@kdw-asus
               check 'Allow write access'
     - Add the long private key to the Travis settings page.
-              Environment Variables section add a key with the name DOCUMENTER_KEY
-              Do not set the variable to be displayed in the build log
-    * When adding the RSA host key, if Travis ask passphrash, regenerate the keys in the linux
-       and put the keys to GitHub and Travis CI instead.
+              Environment Variables section add a key with the name
+                      DOCUMENTER_KEY. Do not set the variable to be displayed.
+    * When adding the RSA host key, if Travis ask passphrash, regenerate
+        the keys in the linux and put the keys to GitHub and Travis CI
+        instead.(or may use other 'ssh-keygen' program)
 
 2. .travis.yml Configuration : Add follow lines in the file.
     after_success:
-  - julia -e 'Pkg.add("Documenter")'
-  - julia -e 'cd(Pkg.dir("TravisTest")); include(joinpath("docs", "make.jl"))'
+     - julia -e 'Pkg.add("Documenter")'
+     - julia -e 'cd(Pkg.dir("TravisTest")); include(joinpath("docs",
+         "make.jl"))'
 
 3. Edit docs/make.jl
-    using Documenter, PACKAGE_NAME
+    using Documenter, TravisTest
     makedocs()
     deploydocs(
         deps   = Deps.pip("mkdocs", "python-markdown-math"),
         repo = "github.com/kdw503/TravisTest.jl.git",
         julia = "0.6",
-        osname = "linux" # We don't need to specify this becasue linux is a default os.
+        osname = "linux" # Don't need to specify. Linux is a default os.
     )
-   * The mandatory julia keyword argument specifies the Julia version.
-      This must be one from the julia: section of the .travis.yml. 
-   * The example above includes the dependencies mkdocs and python-markdown-math.
-      The former makes sure that MkDocs is installed to deploy the documentation.
-      And, the latter provides the mdx_math markdown extension for rendering of latex equations.
+   * The mandatory julia keyword argument specifies the julia version.
+     This must be one from the julia: section of the .travis.yml.
+   * The example above includes the dependencies mkdocs and
+         python-markdown-math.The former makes sure that MkDocs is installed
+        to deploy the documentation.And, the latter provides the mdx_math
+        markdown extension for rendering of latex equations.(need step 4)
 
-4. Edit docs/mkdics.yml, if using MkDOcs to convert the markdown files generated by Documenter to HTML.
+4. Edit docs/mkdocs.yml, if using MkDOcs to convert the markdown files
+     generated by Documenter to HTML.
 
 5. Edit .gitignore
     docs/build/
@@ -109,9 +125,11 @@ Each time you push new updates to your master branch of a package repository, th
 
 7. Add badges in the README.md
    If documents are generated from master branch
-        [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kdw503.github.io/TravisTest.jl/latest)
+        [![](https://img.shields.io/badge/docs-latest-blue.svg)]
+                (https://kdw503.github.io/TravisTest.jl/latest)
    if documents are generated from tagged branch
-        [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kdw503.github.io/TravisTest.jl/stable)
+        [![](https://img.shields.io/badge/docs-stable-blue.svg)]
+                (https://kdw503.github.io/TravisTest.jl/stable)
 
 
 
@@ -131,7 +149,4 @@ Continuous Integration is the practice of merging in small code changes frequent
 * Travis CI (CI for Mac and Linux?)
 - Travis CI supports your development process by auto matically building, testing, deployments and notification.
 - When you run a build, Travis CI clones your GitHub repository into a brand new virtual environment, and carries out a series of tasks to build and test your code. 
-- Terms : job(composed of a series of phases), phase(install phase, script phase, deploy phase), 
-   build(might have several jobs, each of which tests a project with a different version of a programming language), 
-   stage(a group of jobs that run in parallel)
-
+- Terms : job(composed of a series of phases), phase(install phase, script phase, deploy phase), build(might have several jobs, each of which tests a project with a different version of a programming language), stage(a group of jobs that run in parallel)

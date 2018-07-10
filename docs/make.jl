@@ -5,7 +5,8 @@ makedocs(modules  = [TravisTest],
          sitename = "TravisTest",
          pages    = ["index.md", "reference.md"])
 
-deploydocs(repo   = "github.com/kdw503/TravisTest.jl.git",
+deploydocs(deps   = Deps.pip("mkdocs", "python-markdown-math"),
+           repo   = "github.com/kdw503/TravisTest.jl.git",
            julia  = "0.6",
            target = "build",
            deps   = nothing,

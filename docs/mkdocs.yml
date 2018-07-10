@@ -1,5 +1,5 @@
-site_name:        TravisTest.jl
-repo_url:         https://github.com/kdw503/TravisTest.jl
+site_name:        TravisTest
+repo_url:         https://github.com/kdw503/TravisTest
 site_description: For testing Travis CI
 site_author:      Dae Woo Kim
 

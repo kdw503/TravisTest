@@ -9,18 +9,18 @@
 
 3. Create files in the local drive as below.
     TravisTest 
-          曳 docs 
-          早    曳 src
-          早    早  曳 index.md
-          早    早  曲 reference.md
-          早    曳 make.jl
-          早    曲 mkdocs.yml
-          曳 src
-          早   曲 TravisTest.jl
-          曳 test
-          早   曲 runtest.jl
-          曳 .travis.yml
-          曲 README.md
+       曳 docs 
+       早  曳 src
+       早  早  曳 index.md
+       早  早  曲 reference.md
+       早  曳 make.jl
+       早  曲 mkdocs.yml
+       曳 src
+       早  曲 TravisTest.jl
+       曳 test
+       早  曲 runtest.jl
+       曳 .travis.yml
+       曲 README.md
 
 4. Install Travis CI GitHub App to the repository
     - Login to Travis CI site :

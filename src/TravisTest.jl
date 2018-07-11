@@ -1,7 +1,7 @@
 module TravisTest
+
 using Gtk
-# using UnregisteredPkg
-using BlockRegistration
+using UnregisteredPkg
 
 export add_test
 export window
@@ -23,23 +23,12 @@ function window()
 	GtkWindow("test")
 end
 
-#==
 """
     subtract_test_wrapper(a,b)
 Wrap an UnregisteredPkg.subtract_test function.
 """
 function subtract_test_wrapper(a,b)
     subtract_test(a,b)
-end
-==#
-
-"""
-    subtract_test_wrapper(a,b)
-Wrap an UnregisteredPkg.subtract_test function.
-"""
-function subtract_test_wrapper(a, b)
-    eval(:(using UnregisteredPkg))
-    Base.invokelatest(UnregisteredPkg.subtract_test, a, b)
 end
 
 end

@@ -1,10 +1,10 @@
 module TravisTest
 using Gtk
-using BoxTrees
+using UnregisteredPkg
 
 export add_test
 export window
-export makebox
+export substract_test_wrapper
 
 """
     add_test(a,b)
@@ -23,11 +23,11 @@ function window()
 end
 
 """
-    makebox(strt, stop)
-Make a box.
+    substract_test_wrapper(a,b)
+Wrap an UnregisteredPkg.substract_test function.
 """
-function makebox(strt, stop)
-    Box(ClosedInterval{UInt8}(strt, stop))
+function substract_test_wrapper(a,b)
+    substract_test(a,b)
 end
 
 end

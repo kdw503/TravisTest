@@ -140,7 +140,7 @@ Each time you push new updates to your master branch of a package repository, th
 
 
 * Using registered package
-As an example we will use the Gtk package. 
+As an example, we will use the Gtk package. 
 
 1. Modify 'TravisTest.jl' and 'runtest.jl' accordingly.
     TravisTest.jl
@@ -187,25 +187,34 @@ As an example we will use the Gtk package.
 
 
 * Using unregistered package
-As an example we will use the BoxTrees lab package
+As an example, we will make and use a dummy package named
+'UnregisteredPkg'.
 
-1. Modify 'TravisTest.jl' and 'runtest.jl' accordingly.
+1. Make a dummy 'UnregisteredPkg' in the new repository named 'UnregisteredPkg.jl' with /src/UnregisteredPkg.jl file whose contents are
+    module UnregisteredPkg
+    export substract_test
+    function substract_test(a,b)
+        a - b
+    end
+    end
+
+2. Modify 'TravisTest.jl' and 'runtest.jl' accordingly.
     TravisTest.jl
           ...
-          using BoxTrees
-          export makebox
-          function makebox(strt, stop)
-                 Box(ClosedInterval{UInt8}(strt, stop))
+          using UnregisteredPkg
+          export substract_test_wrapper
+          function substract_test_wrapper(a,b)
+              substract_test(a,b)
           end
           ...
      runtest.jl
           ...
-          makebox(5,8)
+          @test substract_test_wrapper(8,5) == 3
 
 2. Add a 'TravisTest/deps/build.jl' file. with contents as below,
-    if Base.find_in_path("BoxTrees") == nothing
-        Pkg.clone("git@github.com:HolyLab/BoxTrees.jl.git")
-        Pkg.build("BoxTrees")
+    if Base.find_in_path("UnregisteredPkg") == nothing
+        Pkg.clone("https://github.com/kdw503/UnregisteredPkg.jl.git")
+        Pkg.build("UnregisteredPkg")
     end
 
 

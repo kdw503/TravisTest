@@ -202,6 +202,11 @@ As an example we will use the BoxTrees lab package
           ...
           makebox(5,8)
 
+2. Add a 'TravisTest/deps/build.jl' file. with contents as below,
+    if Base.find_in_path("BoxTrees") == nothing
+        Pkg.clone("git@github.com:HolyLab/BoxTrees.jl.git")
+        Pkg.build("BoxTrees")
+    end
 
 
 

@@ -1,7 +1,7 @@
 module TravisTest
 using Gtk
 
-export add_test
+export add_test, window
 
 """
     add_test(a,b)

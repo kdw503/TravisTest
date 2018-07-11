@@ -1,7 +1,15 @@
 # Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
+sudo: true
+dist: trusty
 os:
   - linux
+addons:
+    apt:
+        packages:
+            - xvfb
+            - xauth
+            - libgtk-3-0
 julia:
   - 0.6
 notifications:
@@ -9,7 +17,7 @@ notifications:
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd()); Pkg.build("TravisTest")'
-  - julia -e 'Pkg.test("TravisTest")'
+  - xvfb-run julia -e 'Pkg.test("TravisTest")'
 after_success:
 # update the documentation
   - julia -e 'Pkg.add("Documenter")'

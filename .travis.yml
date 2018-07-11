@@ -18,7 +18,7 @@ script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd()); Pkg.build("TravisTest")'
   - xvfb-run julia -e 'Pkg.test("TravisTest")'
-after_success:
+after_script: # instead of after_success to generate documents anyway
 # update the documentation
   - julia -e 'Pkg.add("Documenter")'
   - xvfb-run julia -e 'cd(Pkg.dir("TravisTest")); ENV["DOCUMENTER_DEBUG"] = "true"; include(joinpath("docs", "make.jl"))'

@@ -1,6 +1,7 @@
 module TravisTest
 using Gtk
 # using UnregisteredPkg
+using BlockRegistration
 
 export add_test
 export window

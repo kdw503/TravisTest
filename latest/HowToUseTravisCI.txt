@@ -9,18 +9,18 @@
 
 3. Create files in the local drive as below.
     TravisTest 
-          曳 docs 
-          早    曳 src
-          早    早  曳 index.md
-          早    早  曲 reference.md
-          早    曳 make.jl
-          早    曲 mkdocs.yml
-          曳 src
-          早   曲 TravisTest.jl
-          曳 test
-          早   曲 runtest.jl
-          曳 .travis.yml
-          曲 README.md
+       曳 docs 
+       早  曳 src
+       早  早  曳 index.md
+       早  早  曲 reference.md
+       早  曳 make.jl
+       早  曲 mkdocs.yml
+       曳 src
+       早  曲 TravisTest.jl
+       曳 test
+       早  曲 runtest.jl
+       曳 .travis.yml
+       曲 README.md
 
 4. Install Travis CI GitHub App to the repository
     - Login to Travis CI site :
@@ -51,6 +51,40 @@
    - We can check the progress in Travis CI site.
 
 
+* Using registered package
+As an example we will use the Gtk package
+
+1. Add REQUIRE files in the root directory of the package with contents,
+      julia 0.6
+      Gtk
+
+2. Modify .travis.yml as below because Gtk use X window.
+      language: julia
+      sudo: true
+      dist: trusty
+      os:
+        - linux
+      addons:
+          apt:
+              packages:
+                  - xvfb
+                  - xauth
+                  - libgtk-3-0
+      julia:
+        - 0.6
+      notifications:
+        email: false
+      script:
+        - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+        - julia -e 'Pkg.clone(pwd()); Pkg.build("TravisTest")'
+        - xvfb-run julia -e 'Pkg.test("TravisTest")'
+      after_success:
+      # update the documentation
+        - julia -e 'Pkg.add("Documenter")'
+        - julia -e 'cd(Pkg.dir("TravisTest")); ENV["DOCUMENTER_DEBUG"] = "true";
+
+
+
 * Using 'Documenter' in the Travis CI (after adding Travis CI App)
 
 Each time you push new updates to your master branch of a package repository, the following will happen.
@@ -65,7 +99,8 @@ Each time you push new updates to your master branch of a package repository, th
     - Make sure that 'which', 'git', and 'ssh-keygen' is installed.
     - julia> using Documenter
     - julia> Travis.genkeys("TravisTest")
-              Info: add the public key below to https://github.com/kdw503....
+              Info: add the public key below to 
+                                     https://github.com/kdw503....
               keys with read/write access:
 
               [SSH PUBLIC KEY HERE]
@@ -78,12 +113,12 @@ Each time you push new updates to your master branch of a package repository, th
     - Add the public ssh key to the settings page for the GitHub repository
          go to https://github.com/kdw503/TravisTest/settings/keys
          and add the public key by clicking the 'Add deply key' button
-              Title : documenter
-              Key : ssh-rsa AAAAB3NzaC1yc.....tCxaJiun kdw@kdw-asus
-              check 'Allow write access'
+           Title : documenter
+           Key : ssh-rsa AAAAB3NzaC1yc.....tCxaJiun kdw@kdw-asus
+           check 'Allow write access'
     - Add the long private key to the Travis settings page.
-              Environment Variables section add a key with the name
-                      DOCUMENTER_KEY. Do not set the variable to be displayed.
+        Environment Variables section add a key with the name
+        DOCUMENTER_KEY. Do not set the variable to be displayed.
     * When adding the RSA host key, if Travis ask passphrash, regenerate
         the keys in the linux and put the keys to GitHub and Travis CI
         instead.(or may use other 'ssh-keygen' program)
@@ -101,12 +136,12 @@ Each time you push new updates to your master branch of a package repository, th
         deps   = Deps.pip("mkdocs", "python-markdown-math"),
         repo = "github.com/kdw503/TravisTest.jl.git",
         julia = "0.6",
-        osname = "linux" # Don't need to specify. Linux is a default os.
+            osname = "linux" # Don't need to specify. Linux is a default os.
     )
    * The mandatory julia keyword argument specifies the julia version.
      This must be one from the julia: section of the .travis.yml.
    * The example above includes the dependencies mkdocs and
-         python-markdown-math.The former makes sure that MkDocs is installed
+        python-markdown-math.The former makes sure that MkDocs is installed
         to deploy the documentation.And, the latter provides the mdx_math
         markdown extension for rendering of latex equations.(need step 4)
 
@@ -121,7 +156,9 @@ Each time you push new updates to your master branch of a package repository, th
     By default, Documenter pushes documentation to the gh-pages branch. 
     If the branch does not exist it will be created automatically by deploydocs. 
     * If error happen when creating the 'gh-pages' directory, ignore this?
-      Checking out gh-pages failed with error: ErrorException("failed process: Process(`git checkout -b gh-pages upstream/gh-pages`, ProcessExited(128)) [128]")
+      Checking out gh-pages failed with error: ErrorException("failed 
+          process: Process(`git checkout -b gh-pages upstream/gh-pages`, 
+          ProcessExited(128)) [128]")
 
 7. Add badges in the README.md
    If documents are generated from master branch

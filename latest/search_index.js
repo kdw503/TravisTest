@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "TravisTest",
     "title": "TravisTest",
     "category": "section",
-    "text": "TravisTest for testing Travis."
+    "text": "TravisTest for testing Travis CI."
 },
 
 {

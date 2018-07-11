@@ -3,7 +3,7 @@
 [![Latest doc][latest-doc-img]][latest-doc-url]
 [![Build Status][build-img]][build-url]
 
-For test Travis
+For testing Travis CI
 
 [stable-doc-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [stable-doc-url]: https://kdw503.github.io/TravisTest/stable

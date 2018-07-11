@@ -1,3 +1,3 @@
 # TravisTest
 
-TravisTest for testing Travis.
+TravisTest for testing Travis CI.
